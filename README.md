@@ -1,5 +1,6 @@
 ☕️ [Buy me a coffee](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=SC4D2NS8G2JJ8&source=url)
 
+<<<<<<< HEAD
 ![Node CI](https://github.com/agentcooper/react-pdf-highlighter/workflows/Node%20CI/badge.svg)
 
 ## react-pdf-highlighter
@@ -23,7 +24,24 @@ Create React App example is available in [`./create-react-app-example`](https://
 
 ### Installation
 
-`npm install react-pdf-highlighter`
+# `npm install react-pdf-highlighter`
+
+`react-pdf-annotator` provides annotation experience for PDF documents on web
+built on top of PDF.js. Text and rectangular highlights are supported. Highlight
+data format is independent of the viewport, making it suitable for saving on the
+server.
+
+### Installation
+
+`npm install react-pdf-annotator`
+
+### Example
+
+See
+[`demo/src/App.js`](https://github.com/agentcooper/react-pdf-annotator/blob/master/demo/src/App.js)
+for React component API example.
+
+> > > > > > > c3056fc (README)
 
 See
 [`./example/src/App.tsx`](https://github.com/agentcooper/react-pdf-highlighter/blob/master/example/src/App.tsx)
