@@ -71,6 +71,7 @@ See also:
 ### FAQ
 
 ##### Can I get a new PDF with the highlights embedded into the document?
+<<<<<<< HEAD
 
 Take a look at https://pdf-lib.js.org.
 
@@ -81,6 +82,9 @@ Yes, but people from https://www.pdfannotator.com/ asked me to rename, since [th
 ##### I'm trying the demo with my PDF and it is not loading!
 
 Please check the [CORS headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) on your url. It is required for the cross-domain request.
+=======
+No, but [pdf-annotation-service](https://github.com/agentcooper/pdf-annotation-service) might be helpful for you.
+>>>>>>> a4b3b55 (Update README.md)
 
 ### Compatibility
 
