@@ -4,11 +4,11 @@
 data format is independent of the viewport, making it suitable for saving on the
 server.
 
-### Demo
+### Example (Create React App)
 
-For online demo check https://agentcooper.github.io/react-pdf-highlighter/.
+For online example check https://agentcooper.github.io/react-pdf-highlighter/.
 
-To run the demo app locally:
+To run the example app locally:
 
 ```
 npm install
@@ -23,7 +23,7 @@ type signatures.
 `npm install react-pdf-highlighter`
 
 See
-[`demo/src/App.js`](https://github.com/agentcooper/react-pdf-highlighter/blob/master/demo/src/App.js)
+[`packages/example/src/App.js`](https://github.com/agentcooper/react-pdf-highlighter/blob/master/packages/example/src/App.js)
 for React component API example.
 
 ### Prior art
@@ -38,6 +38,8 @@ provide text highlights out of the box.
 PDF.js provides only viewer:
 
 > [PDF.js is mainly written for reading PDF files, not editing them. Because of that we don't yet support adding any kind of annotations. We do however support rendering a number of annotation types for viewing.](https://github.com/mozilla/pdf.js/wiki/Frequently-Asked-Questions#is-it-possible-to-add-annotations-to-a-pdf)
+
+See also:
 
 - https://github.com/mozilla/pdf.js
 - https://github.com/wojtekmaj/react-pdf
