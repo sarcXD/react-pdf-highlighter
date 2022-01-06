@@ -93,7 +93,7 @@ export interface T_PDFJS_Viewer {
     pageNumber: number;
     destArray: Array<any>;
   }) => void;
-  currentScaleValue: string;
+  currentScaleValue: string | number;
 }
 
 export interface T_PDFJS_LinkService {
