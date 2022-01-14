@@ -81,8 +81,6 @@ interface Props<T_HT> {
   onScrollChange: () => void;
   scrollRef: (scrollTo: (highlight: IHighlight) => void) => void;
   pdfDocument: PDFDocumentProxy;
-  pdfViewer: any;
-  setPdfViewer: any;
   pdfScaleValue: string;
   onSelectionFinished: (
     position: ScaledPosition,
@@ -122,8 +120,6 @@ export class PdfHighlighter<T_HT extends IHighlight> extends PureComponent<
 
   // @ts-ignore
   viewer: T_PDFJS_Viewer;
-  passedViewer: any;
-  passedSetViewer: any;
 
   resizeObserver: ResizeObserver | null = null;
   containerNode?: HTMLDivElement | null = null;
@@ -179,11 +175,10 @@ export class PdfHighlighter<T_HT extends IHighlight> extends PureComponent<
   }
 
   init() {
-    let { pdfDocument, pdfViewer, setPdfViewer } = this.props;
+    let { pdfDocument } = this.props;
 
     this.viewer =
       this.viewer ||
-      pdfViewer ||
       new PDFViewer({
         container: this.containerNode,
         eventBus: this.eventBus,
@@ -192,9 +187,6 @@ export class PdfHighlighter<T_HT extends IHighlight> extends PureComponent<
         linkService: this.linkService,
       });
 
-    setPdfViewer(this.viewer);
-    this.passedViewer = pdfViewer;
-    this.passedSetViewer = setPdfViewer;
     this.linkService.setDocument(pdfDocument);
     this.linkService.setViewer(this.viewer);
     this.viewer.setDocument(pdfDocument);
