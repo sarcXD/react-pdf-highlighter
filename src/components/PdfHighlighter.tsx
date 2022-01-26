@@ -44,7 +44,6 @@ import type {
   LTWHP,
 } from "../types";
 import type { PDFDocumentProxy } from "pdfjs-dist/types/display/api";
-
 type T_ViewportHighlight<T_HT> = { position: Position } & T_HT;
 
 interface State<T_HT> {
@@ -89,6 +88,8 @@ interface Props<T_HT> {
     transformSelection: () => void
   ) => JSX.Element | null;
   enableAreaSelection: (event: MouseEvent) => boolean;
+  // self added
+  SD_pdfPropts: { state: any; action: any };
 }
 
 const EMPTY_ID = "empty-id";
@@ -120,7 +121,8 @@ export class PdfHighlighter<T_HT extends IHighlight> extends PureComponent<
 
   // @ts-ignore
   viewer: T_PDFJS_Viewer;
-
+  // self-implemented
+  SD_pdfPropts: { state: any; action: any };
   resizeObserver: ResizeObserver | null = null;
   containerNode?: HTMLDivElement | null = null;
   unsubscribe = () => {};
@@ -145,12 +147,14 @@ export class PdfHighlighter<T_HT extends IHighlight> extends PureComponent<
       const { ownerDocument: doc } = ref;
       eventBus.on("textlayerrendered", this.onTextLayerRendered);
       eventBus.on("pagesinit", this.onDocumentReady);
+      eventBus.on("pagechanging", this.onPageChanged);
       doc.addEventListener("selectionchange", this.onSelectionChange);
       doc.addEventListener("keydown", this.handleKeyDown);
       doc.defaultView?.addEventListener("resize", this.debouncedScaleValue);
       if (observer) observer.observe(ref);
 
       this.unsubscribe = () => {
+        eventBus.off("pagechanging", this.onPageChanged);
         eventBus.off("pagesinit", this.onDocumentReady);
         eventBus.off("textlayerrendered", this.onTextLayerRendered);
         doc.removeEventListener("selectionchange", this.onSelectionChange);
@@ -175,8 +179,7 @@ export class PdfHighlighter<T_HT extends IHighlight> extends PureComponent<
   }
 
   init() {
-    let { pdfDocument } = this.props;
-
+    let { pdfDocument, SD_pdfPropts } = this.props;
     this.viewer =
       this.viewer ||
       new PDFViewer({
@@ -191,6 +194,16 @@ export class PdfHighlighter<T_HT extends IHighlight> extends PureComponent<
     this.linkService.setViewer(this.viewer);
     this.viewer.setDocument(pdfDocument);
 
+    SD_pdfPropts?.action({
+      init: true,
+      type: "init",
+      data: {
+        pdfDocument: pdfDocument,
+        pdfViewer: this.viewer,
+      },
+    });
+
+    this.SD_pdfPropts = SD_pdfPropts;
     // debug
     (window as any).PdfViewer = this;
   }
@@ -478,6 +491,16 @@ export class PdfHighlighter<T_HT extends IHighlight> extends PureComponent<
     scrollRef(this.scrollTo);
   };
 
+  onPageChanged = (evt) => {
+    this.SD_pdfPropts?.action({
+      init: false,
+      type: "tb-chng-page",
+      data: {
+        page: evt.pageNumber,
+      },
+    });
+  };
+
   onSelectionChange = () => {
     const container = this.containerNode;
     const selection = getWindow(container).getSelection();
@@ -606,7 +629,7 @@ export class PdfHighlighter<T_HT extends IHighlight> extends PureComponent<
     if (this.viewer) {
       this.viewer.currentScaleValue = this.viewer.currentScaleValue
         ? this.viewer.currentScaleValue
-        : this.props.pdfScaleValue; //"page-width";
+        : "page-width";
     }
   };
 
