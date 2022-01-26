@@ -75,8 +75,8 @@ export interface Viewport {
 }
 
 export interface T_EventBus {
-  on: (eventName: string, callback: () => void) => void;
-  off: (eventName: string, callback: () => void) => void;
+  on: (eventName: string, callback: (any) => void) => void;
+  off: (eventName: string, callback: (any) => void) => void;
 }
 
 export interface T_PDFJS_Viewer {
@@ -94,6 +94,7 @@ export interface T_PDFJS_Viewer {
     destArray: Array<any>;
   }) => void;
   currentScaleValue: string | number;
+  currentPageNumber: number;
 }
 
 export interface T_PDFJS_LinkService {
