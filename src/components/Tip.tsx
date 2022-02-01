@@ -1,38 +1,60 @@
 import React, { Component } from "react";
+import { ReactElement } from "react";
 
 import "../style/Tip.css";
 
 interface State {
   compact: boolean;
   text: string;
-  emoji: string;
+  key: number | null;
+  img: string | null;
+}
+
+interface CustomButton {
+  key: number;
+  type: string;
+  ele: ReactElement;
 }
 
 interface Props {
-  onConfirm: (comment: { text: string; emoji: string }) => void;
+  onConfirm: (comment: {
+    text: string;
+    key: number | null;
+    img: string;
+  }) => void;
   onOpen: () => void;
   onUpdate?: () => void;
+  customButtons?: CustomButton[];
 }
 
 export class Tip extends Component<Props, State> {
   state: State = {
     compact: true,
     text: "",
-    emoji: "",
+    key: null,
+    img: null,
   };
+  customButtons: CustomButton[];
 
   // for TipContainer
   componentDidUpdate(nextProps: Props, nextState: State) {
-    const { onUpdate } = this.props;
+    const { onUpdate, customButtons } = this.props;
+    this.customButtons = customButtons;
 
     if (onUpdate && this.state.compact !== nextState.compact) {
       onUpdate();
     }
   }
 
+  uploadImg(event) {
+    event.preventDefault();
+    var img = event.target.files[0];
+    this.setState({ img: URL.createObjectURL(img) });
+  }
+
   render() {
     const { onConfirm, onOpen } = this.props;
-    const { compact, text, emoji } = this.state;
+    const { compact, text, key, img } = this.state;
 
     return (
       <div className="Tip">
@@ -51,7 +73,7 @@ export class Tip extends Component<Props, State> {
             className="Tip__card"
             onSubmit={(event) => {
               event.preventDefault();
-              onConfirm({ text, emoji });
+              onConfirm({ text, key, img });
             }}
           >
             <div>
@@ -69,21 +91,36 @@ export class Tip extends Component<Props, State> {
                 }}
               />
               <div>
-                {["💩", "😱", "😍", "🔥", "😳", "⚠️"].map((_emoji) => (
-                  <label key={_emoji}>
-                    <input
-                      checked={emoji === _emoji}
-                      type="radio"
-                      name="emoji"
-                      value={_emoji}
-                      onChange={(event) =>
-                        this.setState({ emoji: event.target.value })
-                      }
-                    />
-                    {_emoji}
+                {this.customButtons.map((btn) => (
+                  <label key={btn?.key}>
+                    {btn?.type === "radio" ? (
+                      <input
+                        checked={key === btn?.key}
+                        type={btn?.type}
+                        name="emoji"
+                        value={btn?.key}
+                        onChange={(event) => this.setState({ key: btn?.key })}
+                      />
+                    ) : (
+                      <input
+                        checked={key === btn?.key}
+                        type="file"
+                        name="emoji"
+                        style={{ display: "none" }}
+                        onChange={(event) => this.uploadImg(event)}
+                      />
+                    )}
+                    {btn?.ele}
                   </label>
                 ))}
               </div>
+              {this.state?.img ? (
+                <img
+                  src={this.state?.img}
+                  style={{ width: "50%" }}
+                  alt="locally uploaded"
+                />
+              ) : null}
             </div>
             <div>
               <input type="submit" value="Save" />
