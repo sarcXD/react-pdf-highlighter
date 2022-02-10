@@ -87,7 +87,7 @@ interface Props<T_HT> {
     hideTipAndSelection: () => void,
     transformSelection: () => void
   ) => JSX.Element | null;
-  enableAreaSelection: (event: MouseEvent) => boolean;
+  enableAreaSelection: (event: MouseEvent | TouchEvent) => boolean;
   // self added
   SD_pdfPropts: { state: any; action: any };
 }
@@ -654,7 +654,7 @@ export class PdfHighlighter<T_HT extends IHighlight> extends PureComponent<
               onChange={(isVisible) =>
                 this.setState({ isAreaSelectionInProgress: isVisible })
               }
-              shouldStart={(event) =>
+              shouldStart={(event: MouseEvent | TouchEvent) =>
                 enableAreaSelection(event) &&
                 isHTMLElement(event.target) &&
                 Boolean(asElement(event.target).closest(".page"))
