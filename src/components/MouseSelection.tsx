@@ -72,7 +72,7 @@ class MouseSelection extends Component<Props, State> {
 
   selectionMoved(event, container: HTMLElement, isTouch: boolean) {
     const { onSelection, onDragStart, onDragEnd, shouldStart } = this.props;
-    const touch = isTouch ? event?.touches[0] : event; 
+    const touch = isTouch ? event?.changedTouches[0] : event; 
     if (!shouldStart(event)) {
       this.reset();
       return;
@@ -91,20 +91,21 @@ class MouseSelection extends Component<Props, State> {
       locked: false,
     });
 
-    const onMouseUp = (event: MouseEvent): void => {
+    const onSelectionUp = (event, isTouch = false): void => {
       // emulate listen once
-      event.currentTarget?.removeEventListener(
-        "mouseup",
-        onMouseUp as EventListener
-      );
-
+      isTouch ? event.currentTarget?.removeEventListener(
+        "touchend",
+        onSelectionUp as EventListener
+      ):
+      event.currentTarget?.removeEventListener("mouseup", onSelectionUp as EventListener);
       const { start } = this.state;
+      const touch = isTouch ? event?.changedTouches[0] : event;
 
       if (!start) {
         return;
       }
 
-      const end = this.containerCoords(event.pageX, event.pageY, container);
+      const end = this.containerCoords(touch.pageX, touch.pageY, container);
 
       const boundingRect = this.getBoundingRect(start, end);
 
@@ -140,8 +141,12 @@ class MouseSelection extends Component<Props, State> {
 
     const { ownerDocument: doc } = container;
     if (doc.body) {
-      isTouch ? doc.body.addEventListener("touchend", onMouseUp) 
-      : doc.body.addEventListener("mouseup", onMouseUp);
+      isTouch ? doc.body.addEventListener("touchend", (event) => {
+        onSelectionUp(event, true);
+      }) 
+      : doc.body.addEventListener("mouseup", (event) => {
+        onSelectionUp(event);
+      });
     }
   }
 
@@ -181,7 +186,7 @@ class MouseSelection extends Component<Props, State> {
     });
 
     container.addEventListener("touchmove", (event: TouchEvent) => {
-      const touch = event?.touches[0];
+      const touch = event?.changedTouches[0];
       const { start, locked } = this.state;
 
       if (!start || locked) {
@@ -197,7 +202,7 @@ class MouseSelection extends Component<Props, State> {
     container.addEventListener("mousedown", (event: MouseEvent) => {
       this.selectionMoved(event,container,false);
     });
-    container.addEventListener("touchmove",(event: TouchEvent) => {
+    container.addEventListener("touchstart",(event: TouchEvent) => {
       this.selectionMoved(event,container,true);
     })
   }
