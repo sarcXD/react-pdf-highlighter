@@ -6,6 +6,7 @@ import "../style/Tip.css";
 interface State {
   compact: boolean;
   text: string;
+  tag: string;
   key: number | null;
   img: string | null;
 }
@@ -19,6 +20,7 @@ interface CustomButton {
 interface Props {
   onConfirm: (comment: {
     text: string;
+    tag: string;
     key: number | null;
     img: string;
   }) => void;
@@ -30,6 +32,7 @@ interface Props {
 export class Tip extends Component<Props, State> {
   state: State = {
     compact: true,
+    tag: "",
     text: "",
     key: null,
     img: null,
@@ -54,7 +57,7 @@ export class Tip extends Component<Props, State> {
 
   render() {
     const { onConfirm, onOpen } = this.props;
-    const { compact, text, key, img } = this.state;
+    const { compact, text, tag, key, img } = this.state;
 
     return (
       <div className="Tip">
@@ -73,23 +76,29 @@ export class Tip extends Component<Props, State> {
             className="Tip__card"
             onSubmit={(event) => {
               event.preventDefault();
-              onConfirm({ text, key, img });
+              onConfirm({ text, tag, key, img });
             }}
           >
             <div>
-              <textarea
-                placeholder="Your comment"
-                autoFocus
-                value={text}
-                onChange={(event) =>
-                  this.setState({ text: event.target.value })
-                }
-                ref={(node) => {
-                  if (node) {
-                    node.focus();
+              <div className="inp-col">
+                <input
+                    placeholder="Tag"
+                    autoFocus
+                    value={tag}
+                    type="text"
+                    onChange={(event) =>
+                      this.setState({ tag: event.target.value })
+                    }
+                />
+                <textarea
+                  placeholder="Your comment"
+                  autoFocus
+                  value={text}
+                  onChange={(event) =>
+                    this.setState({ text: event.target.value })
                   }
-                }}
-              />
+                />
+              </div>
               <div>
                 {this.customButtons.map((btn) => (
                   <label key={btn?.key}>
