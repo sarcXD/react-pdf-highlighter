@@ -643,6 +643,11 @@ export class PdfHighlighter<T_HT extends IHighlight> extends PureComponent<
         <div
           ref={this.attachRef}
           className="PdfHighlighter"
+          style={{
+            overflow: this.SD_pdfPropts?.state?.mode?.annot
+              ? 'hidden'
+              : 'auto'
+          }}
           onContextMenu={(e) => e.preventDefault()}
         >
           <div className="pdfViewer" />
